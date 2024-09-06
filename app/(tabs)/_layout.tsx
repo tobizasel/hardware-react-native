@@ -1,12 +1,17 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
-
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
+import { createStackNavigator } from '@react-navigation/stack';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import Contactos from './contactos/Contactos';
+import Emergencia from "./contactos/Emergencia.js"
+
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+
 
   return (
     <Tabs
@@ -30,6 +35,14 @@ export default function TabLayout() {
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'code-slash' : 'code-slash-outline'} color={color} />
           ),
+        }}
+      />
+      <Tabs.Screen
+        name="contactos/Contactos"
+        options={{
+          title: 'Contactos',
+          tabBarIcon: ({ color, focused }) => (
+            <FontAwesome5 name={focused ? "user-alt" : "user"} size={24} color="black" />          ),
         }}
       />
     </Tabs>
