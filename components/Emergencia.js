@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, Button, StyleSheet, Alert, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, Button, StyleSheet, Alert, TouchableOpacity, Vibration } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 
-const PantallaConfiguracionEmergencia = () => {
+const handleSubmit = (titulo,mensaje) => {
+  Alert.alert(titulo, mensaje);
+  Vibration.vibrate(1000);
+}
+
+const PantallaConfiguracionEmergencia = ({setEmergenciaHabilitado}) => {
   const navigation = useRouter();
   const [contacts, setContacts] = useState([]);
 
@@ -17,6 +22,7 @@ const PantallaConfiguracionEmergencia = () => {
         }
       } catch (error) {
         console.error('No se pudieron cargar los contactos', error);
+        handleSubmit("error","No se pudieron cargar los contactos")
       }
     };
 
@@ -27,11 +33,11 @@ const PantallaConfiguracionEmergencia = () => {
   const saveContacts = async (updatedContacts) => {
     try {
       await AsyncStorage.setItem('contacts', JSON.stringify(updatedContacts));
-      Alert.alert('Éxito', 'Contacto de emergencia guardado correctamente.');
-      navigation.back(); // Regresa a la pantalla anterior después de guardar
+      handleSubmit("exito", "Contacto de Emergencia Actualizado")
+      setEmergenciaHabilitado(true) // Regresa a la pantalla anterior después de guardar
     } catch (error) {
       console.error('No se pudo guardar el contacto de emergencia', error);
-      Alert.alert('Error', 'No se pudo guardar el contacto de emergencia.');
+      handleSubmit("error", "No se pudo guardar el contacto de emergencia")
     }
   };
 

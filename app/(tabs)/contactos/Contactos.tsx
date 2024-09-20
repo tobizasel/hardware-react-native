@@ -1,18 +1,26 @@
 import React, { useEffect, useState, useCallback  } from 'react';
-import { View, Text, FlatList, StyleSheet, Button } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Button, Alert, Vibration } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter, useFocusEffect } from 'expo-router';
+import Emergencia from "../../../components/Emergencia.js"
+
+const handleErrors = (mensaje) => {
+  Alert.alert("Error", mensaje);
+  Vibration.vibrate(1000);
+}
 
 const Contactos = () => {
   const navigation = useRouter();
   const [contacts, setContacts] = useState([]);
+  const [emergenciaHabilitado, setEmergenciaHabilitado] = useState(true)
 
   // Función para guardar contactos en AsyncStorage
   const saveContacts = async (contacts) => {
     try {
       await AsyncStorage.setItem('contacts', JSON.stringify(contacts));
     } catch (error) {
+      handleErrors("Error al guardar contactos")
       console.error('Error al guardar contactos', error);
     }
   };
@@ -20,7 +28,7 @@ const Contactos = () => {
   useFocusEffect(
     useCallback(() => {
       loadContacts();
-    }, [])
+    }, [emergenciaHabilitado])
   );
 
   // Función para cargar contactos desde AsyncStorage
@@ -44,6 +52,7 @@ const Contactos = () => {
       }
     } catch (error) {
       console.error('Error al cargar contactos', error);
+      handleErrors("Error al cargar contactos")
     }
   };
 
@@ -56,6 +65,7 @@ const Contactos = () => {
     const principal = item.phoneNumbers[0]?.number;
 
     return (
+            
       <View style={styles.itemContainer}>
         <View style={styles.textContainer}>
           <Text style={styles.name}>{item.name}</Text>
@@ -71,20 +81,25 @@ const Contactos = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={contacts}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-      />
-      <Button
-        title="Configurar Número de Emergencia"
-        onPress={() => navigation.push('./Emergencia')}
-      />
-    </View>
-  );
-};
 
+    <View style={styles.container}>
+    {emergenciaHabilitado ? (
+      <>
+        <FlatList
+          data={contacts}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+        />
+        <Button
+          title="Configurar Número de Emergencia"
+          onPress={() => setEmergenciaHabilitado(false)}
+        />
+      </>
+    ) : (
+      <Emergencia setEmergenciaHabilitado={setEmergenciaHabilitado}/>
+    )}
+  </View>
+)}
 const styles = StyleSheet.create({
   container: {
     flex: 1,

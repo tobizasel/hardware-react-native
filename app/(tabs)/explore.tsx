@@ -27,9 +27,11 @@ const Clima = () => {
   }, []);
 
   const getWeather = async (latitude, longitude) => {
+    console.log(latitude, longitude, API_KEY);
+    
     try {      
       const response = await axios.get(
-        `https://api.openweathermap.org/data/2.5/weather?lat=44.34&lon=10.99&appid=a8fa00e4b999f29151f36f7004450e75`
+        `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=metric`
       );
       setTemperature(response.data.main.temp);
     } catch (error) {

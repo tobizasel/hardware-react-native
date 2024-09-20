@@ -6,7 +6,7 @@ import { Colors } from '@/constants/Colors';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import Contactos from './contactos/Contactos';
-import Emergencia from "./contactos/Emergencia.js"
+import Emergencia from "../../components/Emergencia.js"
 
 
 export default function TabLayout() {
@@ -42,7 +42,15 @@ export default function TabLayout() {
         options={{
           title: 'Contactos',
           tabBarIcon: ({ color, focused }) => (
-            <FontAwesome5 name={focused ? "user-alt" : "user"} size={24} color="black" />          ),
+            <FontAwesome5 name={focused ? "user-alt" : "user"} size={24} color="black" />),
+        }}
+        />
+      <Tabs.Screen
+        name="about"
+        options={{
+          title: 'About',
+          tabBarIcon: ({ color, focused }) => (
+            <FontAwesome5 name={focused ? "user-alt" : "user"} size={24} color="black" />),
         }}
       />
     </Tabs>
